@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.park.dao.UserDao">
+	
+	<!-- 获得用户的信息 -->
+	<select id="getUserMessage"  parameterType="String" resultType="com.park.entity.User">
+		select * from user where phonenumber=#{phonenumber}
+	</select>
+	
+	<!-- 用户登录 -->
+	<select id="login" parameterType="String" resultType="boolean">
+		select
+		count(*) from user where phonenumber=#{0} and password=#{1}
+	</select>
+	
+	<!-- 用户注册 -->
+	<insert id="regist" parameterType="com.park.entity.User">
+		insert into user
+		(phonenumber,nickname,password,role_id,license )
+		values(
+		#{phonenumber},#{nickname},#{password},#{role_id},#{license})
+	</insert>
+	
+	<!-- 修改昵称 -->
+	<update id="updateNickname" parameterType="com.park.entity.User">
+		update user set
+		nickname=#{1} where phonenumber=#{0}
+	</update>
+	
+	<!-- 修改手机号码 -->
+	<update id="updatePhonenumber" parameterType="String">
+		update user set
+		phonenumber=#{1} where phonenumber=#{0}
+	</update>
+	
+	<!-- 修改用户密码 -->
+	<update id="updatePassword" parameterType="String">
+		update user set
+		password=#{2} where phonenumber=#{0} and password=#{1}
+	</update>
+	
+	<!-- 修改车牌号 -->
+	<update id="updateLicense" parameterType="String">
+		update user set
+		license=#{1} where phonenumber=#{0}
+	</update>
+
+	<!--  获取用户收藏信息 --> 
+	<select id="getUserCollect" parameterType="String" resultType="com.park.entity.ParkinglotInfo">
+		select * from parking_lot where parking_id in (select parking_id from user_park where phonenumber=#{phonenumber})	
+	</select>
+	
+
+	
+	
+
+
+</mapper>

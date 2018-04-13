@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.park.dao.AssessDao">
+	
+	<!-- 添加评论 -->
+	<insert id="add" parameterType="com.park.entity.Assess">
+		insert into assess (assess_id,assess_mark,assess_content,assess_time,phonenumber,parking_id,thumbs_up)
+		values(#{assess_id},#{assess_mark},#{assess_content},#{assess_time},#{phonenumber},#{parking_id},#{thumbs_up})
+	</insert>
+	
+	<!-- 查找某个停车场的所有评论 -->
+	<select id="find_ParkingId" parameterType="String" resultType="com.park.entity.Assess">
+		select * from assess
+		where parking_id=#{parkingId}
+	</select>
+	
+	<!-- 删除某个用户的所有评论 -->
+	<delete id="delete_phonenumber" parameterType="String">
+		delete from assess
+		where phonenumber=#{phonenumber}
+	</delete>
+	<!-- 给某停车场点赞 -->
+	<update id="add_thumbs_up" parameterType="String">
+		update parking_lot set thumbs_up=thumbs_up+1 where parking_id=#{parking_id} 
+	</update>
+	
+	<!-- 修改订单评价状态 -->
+	<update id="add_check" parameterType="int">
+		update checkmoney set checkstatus=4 where check_id=#{check_id}
+	</update>
+	
+</mapper>

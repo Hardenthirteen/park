@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.park.dao.ParkingInfoDao">
+	
+	<!-- 获取所有停车场信息 -->
+	<select id="getAllParkinglotInfo" resultType="com.park.entity.ParkinglotInfo">
+		select * from parking_lot
+	</select>
+	<!-- 根据名称模糊查找停车场 -->
+	<select id="searchParkByName"  parameterType="String" resultType="com.park.entity.ParkinglotInfo">
+		select * from parking_lot where parking_name like concat(concat('%',#{parking_name}),'%')
+	</select>
+	<!-- 根据城市名模糊查找停车场 -->
+	<select id="searchParkByLocation" parameterType="String" resultType="com.park.entity.ParkinglotInfo">
+		select * from parking_lot where parking_location like concat(concat('%',#{parking_location}),'%')
+	</select>
+	<!-- 根据好评优先获取停车场信息 -->
+	<select id="getParkinglotInfoByThumbs" resultType="com.park.entity.ParkinglotInfo">
+		select * from parking_lot order by thumbs_up desc
+	</select>
+	<!-- 根据停车场编号获取停车场的空余车位数 -->
+	 <select id="emptyCarspace" parameterType="String" resultType="int"  >
+		select count(*) from car_space where parking_id=#{parking_id} and space_status=0
+	</select>
+	
+	<!-- 根据停车场编号获取收藏停车场的人数 -->
+	 <select id="getCollectUser" parameterType="String" resultType="int">
+		select count(*) from user_park where parking_id=#{parking_id}
+	</select>
+
+	<!-- 查询某个停车场馆所有车位的状态 -->
+	<select id="getAllCarspace" parameterType="String" resultType="com.park.entity.CarSpace">
+		select * from car_space where parking_id=#{parking_id} 
+	</select>
+	
+	<!-- 增加评论人数 -->
+	<update id="addAssessCount" parameterType="String" >
+		update parking_lot set assess_time=assess_time+1 where parking_id=#{parking_id}
+	</update>
+	
+	
+
+
+</mapper>

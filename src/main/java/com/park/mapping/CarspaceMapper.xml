@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.park.dao.CarspaceDao">
+
+	<!-- 预约车位 修改状态 -->
+ 	<update id="reserveCarspace" parameterType="com.park.entity.CarSpace">  
+        update car_space set space_status=#{space_status},
+        phonenumber=#{phonenumber},start_time=#{start_time} where space_location=#{space_location} and parking_id=#{parking_id}
+    </update>
+    
+    <!-- 查询是否能预约  状态是否为0 -->
+    <select  id="findStatus"  parameterType="String" resultType="int" >
+	 select space_status from car_space where parking_id=#{0} and space_location=#{1}
+	</select >
+	
+	<!-- 停车操作修改状态 用户名与开始时间 -->
+	<update id="parkCarspace" parameterType="com.park.entity.CarSpace">
+		update car_space set space_status=#{space_status},
+		phonenumber=#{phonenumber} ,start_time=#{start_time} where space_location=#{space_location} and parking_id=#{parking_id}
+	</update>
+	
+	<!-- 判断是否是自己预约的 -->
+	<select id="compareCarspace" parameterType="com.park.entity.CarSpace" resultType="int">
+		select space_status from car_space where space_location=#{space_location} and  parking_id=#{parking_id} and phonenumber=#{phonenumber}
+	</select>
+     
+    <!-- 取车操作 修改状态 -->
+    <update id="takeCarspace" parameterType="com.park.entity.CarSpace">
+    	update car_space set space_status=#{space_status}
+		where space_location=#{space_location} and parking_id=#{parking_id}
+    </update>
+    <!-- 返回当前车位的账单 -->
+	<select id="payCheck" parameterType="com.park.entity.CarSpace" resultType="com.park.vo.UserCheck">
+		select checkmoney.parking_id,parking_lot.parking_name,check_money,check_start_time,check_over_time,checkmoney.phonenumber from parking_lot,checkmoney
+		where  checkmoney.phonenumber=#{phonenumber} and checkmoney.check_start_time=(select start_time from car_space where space_location=#{space_location}) and parking_lot.parking_id=#{parking_id}
+	</select>
+	
+    
+    
+	 
+</mapper>

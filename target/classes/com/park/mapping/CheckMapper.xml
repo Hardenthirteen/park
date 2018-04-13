@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.park.dao.CheckDao">
+
+	<!-- 添加账单信息 -->
+	<insert id="addCheck" parameterType="com.park.entity.Check"  >
+		insert into checkmoney (check_start_time,check_over_time,check_money ,phonenumber,space_location,parking_id,checkstatus )
+		values( #{check_start_time},#{check_over_time},#{check_money},#{phonenumber},#{space_location},#{parking_id},#{checkstatus}  )
+	</insert>
+	
+	<!-- 停车更新账单信息 -->
+	<update id="updateCheck1" parameterType="com.park.entity.Check">
+		update checkmoney set check_start_time=#{check_start_time},
+		checkstatus=#{checkstatus}
+		where parking_id=#{parking_id} and space_location=#{space_location} and phonenumber=#{phonenumber} 
+	</update>
+	
+	<!-- 取车更新账单信息 -->
+	<update id="updateCheck2" parameterType="com.park.entity.Check">
+		update checkmoney set check_over_time=#{check_over_time},checkstatus=#{checkstatus}
+		where parking_id=#{parking_id} and space_location=#{space_location} and phonenumber=#{phonenumber} 
+	</update>
+	
+	<!-- 用户取消订单 状态为5-->
+	<update id="quitCheck" parameterType="int">
+		update checkmoney set checkstatus=5 where check_id=#{check_id}   
+	</update>
+	
+	<!-- 查找账单信息 -->
+	<select id="findChecktatus" parameterType="com.park.entity.Check" resultType="String">
+		select checkstatus from checkmoney 
+		where parking_id=#{parking_id} and space_location=#{space_location} and phonenumber=#{phonenumber}
+	</select>
+	
+	<!-- 查看某个停车场所有账单 -->
+	<select id="findAllCheck" parameterType="com.park.entity.Check" resultType="com.park.entity.Check">
+	 select * from checkmoney where parking_id=#{parking_id} 
+	</select >
+	<!-- 返回用户的最新订单 -->
+	<select id="getLatestCheck" parameterType="String" resultType="com.park.entity.Check">
+		select * from checkmoney where phonenumber=#{phonenumber} order  by check_start_time 
+	</select>
+	
+	<!-- 查看某个停车场某个状态的账单 -->
+	<select id="findParkingStatus" parameterType="com.park.entity.Check" resultType="com.park.entity.Check">
+	 select * from checkmoney where parking_id=#{parking_id} and checkstatus=#{checkstatus}
+	</select >
+	
+	<!-- 根据头像信息查询用户 -->
+	<select id="getDate" parameterType="com.park.entity.Check" resultType="java.util.Date">
+		select check_start_time from checkmoney where phonenumber in(select phonenumber from user where license=#{license});
+	</select>
+	
+	<!-- 获取用户所有订单 -->
+	<select id="getUserAllCheck" parameterType="String" resultType="com.park.entity.Check">
+		select * from checkmoney where phonenumber=#{phonenumber}
+	</select>
+	
+	<!-- 获取用户未评价订单 -->
+	<select id="getNotAssessCheck" parameterType="String" resultType="com.park.entity.Check">
+		select * from checkmoney where phonenumber=#{phonenumber} and checkstatus=2
+	</select>
+	
+	<!-- 获取用户退款/售后订单 -->
+	<select id="getServeCheck" parameterType="String" resultType="com.park.entity.Check">
+		select * from checkmoney where phonenumber=#{phonenumber} and checkstatus=3
+	</select>
+	
+	<!-- 获取用户未付款订单 -->
+	<select id="getNotPayCheck" parameterType="String" resultType="com.park.entity.Check">
+		select * from checkmoney where phonenumber=#{phonenumber} and checkstatus=1
+	</select>
+	
+	<!-- 获取用户预定未使用订单 -->
+	<select id="getReserveCheck" parameterType="String" resultType="com.park.entity.Check">
+		select * from checkmoney where phonenumber=#{phonenumber} and checkstatus=0
+	</select>
+	
+	<!-- 给订单付款 -->
+	<update id="toPayCheck" parameterType="int">
+		update checkmoney set checkstatus=3 where check_id=#{check_id}
+	</update>
+	<!-- 返回当前车位的账单
+	<select id="payCheck" parameterType="com.park.entity.CarSpace" resultType="com.park.vo.UserCheck">
+		select (car_space.parking_id,parking_lot.parking_name,check_money,check_start_time,check_over_time,checkmoney.phonenumber) from parking_lot,checkmoney,car_space
+		where checkmoney.check_start_time=#{start_time} and checkmoney.phonenumber=#{phonenumber} and parking_lot.parking_id=#{parking_id}
+	</select>
+	 -->
+
+	
+     
+    
+	 
+</mapper>

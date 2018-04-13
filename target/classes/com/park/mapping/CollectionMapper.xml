@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.park.dao.CollectionDao">
+	<!-- 添加收藏 -->
+	<insert id="addCollection" parameterType="com.park.entity.Collection">
+		insert into user_park (phonenumber,parking_id)
+		values(#{phonenumber},#{parking_id})
+	</insert>
+	<!-- 删除收藏 -->
+	<delete id="deleteCollection" parameterType="com.park.entity.Collection">
+		delete from user_park
+		where phonenumber=#{phonenumber} and parking_id=#{parking_id}
+	</delete>
+	
+</mapper>
